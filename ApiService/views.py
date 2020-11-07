@@ -13,11 +13,11 @@ from rest_framework.decorators import api_view
 class PersonneAttest:
     def __init__(self):
         self.prenom = ""
-        self.nom = "Wagon"
-        self.dateNaissance = "06/09/1995"
-        self.villeNaissance = "Dechy"
-        self.adressePostal = "17 rue de la Malterie"
-        self.villeActuel = "Dourges"
+        self.nom = ""
+        self.dateNaissance = ""
+        self.villeNaissance = ""
+        self.adressePostal = ""
+        self.villeActuel = ""
         self.dateSortie = date.today().strftime("%d/%m/%Y")
         self.heureSortie = date.today().strftime("%H:%M")
         self.motif = "sport"
@@ -46,10 +46,9 @@ def genererPdf(request, pk):
     persAtt.villeNaissance = infosAttestation.villeNaissance
     persAtt.adressePostal = infosAttestation.adressePostal
     persAtt.motif = motif
+    persAtt.villeActuel = infosAttestation.villeActuel
 
     pdfAttest = generator(persAtt)
-    print(pdfAttest)
-
     img = open(pdfAttest, 'rb')
 
     response = FileResponse(img)

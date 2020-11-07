@@ -1,0 +1,43 @@
+class IndexView(generic.ListView):
+	template_name = 'HomeManager/index.html'
+	context_object_name = 'dernieres_taches'
+	def get_queryset(self):
+		if self.request.user.is_authenticated == False:
+			print('KO')
+			return HttpResponseRedirect('/login')
+		taches = Tache.objects.filter(etat_text="EC").order_by('-creation_date')[:25]
+		dataJson = []
+		for tache in taches:
+			if(tache.priseEnChargePar_id > 0):
+				personneEnCharge = Personne.objects.get(pk=tache.priseEnChargePar_id)
+				tache.PrenomNomEnCharge = personneEnCharge.prenom_text + ' ' + personneEnCharge.nom_text
+			else:
+				tache.PrenomNomEnCharge = "Non attribué"
+			tache.libelleTache = tache.tache_text + ' (' + tache.PrenomNomEnCharge + ')'
+
+			if(tache.creerPar_id > 0):
+				personneCreation = Personne.objects.get(pk=tache.creerPar_id)
+				tache.PrenomNomCreation = personneCreation.prenom_text + ' ' + personneCreation.nom_text
+			else:
+				tache.PrenomNomCreation = "Non attribué"
+
+			if (tache.urgence_bool == True):
+				urgenceBool = 'true'
+			else:
+				urgenceBool = 'false'
+
+			groupeAttribution = ParametrageTache.objects.get(pk=tache.codeTache_text)
+			tache.GroupeAttributionTache = groupeAttribution.libelleTache_text
+
+			dataJson.append({
+			'tache_id': tache.id,
+			'tache_text': tache.tache_text,
+			'creation_date': tache.creation_date.strftime('%Y-%m-%d'),
+			'jalon_date': tache.jalon_date.strftime('%Y-%m-%d'),
+			'PrenomNomEnCharge': tache.PrenomNomEnCharge,
+			'PrenomNomCreation' : tache.PrenomNomCreation,
+			'urgence_bool' : urgenceBool,
+			'GroupeAttributionTache': tache.GroupeAttributionTache
+			})
+		return dataJson
+

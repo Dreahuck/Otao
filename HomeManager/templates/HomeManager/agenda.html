@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+{% if user.is_authenticated %}
+   <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/calendar.css" %}">  
+   <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/Styles_Rouge.css" %}">  
+  <head>
+    <meta charset="utf-8">
+    <title>Calendrier</title>
+    <script type="text/javascript" src="{% static "HomeManager/js/jquery-3.5.1.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+});
+</script>
+
+</head>
+<body class="fondEcran">
+<div id="calendar-wrap">
+    		<header>
+             <div id="masthead">
+                <a href="/HomeManager">
+                <div id="leftpic" class="masthead-image"></div>
+                </a>
+    			<h1>{{ moisEnCours.titleMois | safe }}</h1>
+                </div>
+    		</header>
+    		<div id="calendar">
+    			<ul class="weekdays">
+    				<li>Lundi</li>
+    				<li>Mardi</li>
+    				<li>Mercredi</li>
+    				<li>Jeudi</li>
+    				<li>Vendredi</li>
+    				<li>Samedi</li>
+                    <li>Dimanche</li>
+    			</ul>
+                {{ moisEnCours.htmlMois | safe }}
+    		</div>
+    	</div>
+    </body>
+    {% else %}
+        <script> 
+    window.location.href = "../login";
+    </script> 
+{% endif %}
+</html>

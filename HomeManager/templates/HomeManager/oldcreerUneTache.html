@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Creer une tache</title>
+    <link rel="stylesheet" type="text/css" href="{% static "HomeManager/DataTables-1.10.21/css/jquery.dataTables.min.css" %}">
+	<script type="text/javascript" src="{% static "HomeManager/js/jquery-3.5.1.js" %}"></script>
+	<script src="{% static "HomeManager/DataTables-1.10.21/js/jquery.dataTables.min.js" %}"></script>
+</head>
+<form action="enregistrementAction/" method="post">
+	{% csrf_token %}
+  	<label for="txt_tache">Nom de la tâche : </label>
+	<input type="text" id="tache_text" name="txt_tache" required minlength="3" maxlength="120" size="130">
+<br>
+	<label for="txt_commentaire">Plus d'information : </label>
+		<input type="text" id="commentaire_text" name="txt_commentaire" maxlength="600" size="100">
+<br>
+  <input type="checkbox" id="isUrgent" name="checkIsUrgent"
+         checked>
+  <label for="checkIsUrgent">Urgent</label>
+<br>
+	<input type="submit" value="enregistrementAction">
+</form>
+</form>
+</html>

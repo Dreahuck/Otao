@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    {% if user.is_authenticated %}
+    <meta charset="utf-8">
+    <title>Liste des tâches</title>
+    <link rel="stylesheet" type="text/css" href="{% static "HomeManager/DataTables-1.10.21/css/jquery.dataTables.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/Styles_Rouge.css" %}">    
+	<script type="text/javascript" src="{% static "HomeManager/js/jquery-3.5.1.js" %}"></script>
+	<script src="{% static "HomeManager/DataTables-1.10.21/js/jquery.dataTables.min.js" %}"></script>
+</head>
+<center>
+  <body class="fondEcran">
+   <div id="masthead">
+    <a href="agenda">
+    <div id="rightpic" class="masthead-image"></div>
+  </a>
+<h1 style="font-size: 50px;"> Bienvenue sur Otao  {{user}} </h1>
+</div>
+ <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/authentification.css" %}">
+<script type="text/javascript">
+  $(document).ready(function() {
+    var data = {{dernieres_taches|safe}};
+     $('#tabTaches').DataTable({
+          data:data,
+          "bInfo" : false,
+          "bFilter": false,
+          "order": [[ 2, "asc" ], [ 5, "desc" ]],
+           "oLanguage": {
+            "sLengthMenu": "Afficher _MENU_ tâches",
+          },
+          columns: [
+              { title: "Titre" , data: "tache_text"},
+              { title: "Date de création" , data: "creation_date"},
+              { title: "Date Jalon" , data: "jalon_date"},
+              { title: "Personne en charge" , data:"PrenomNomEnCharge"},
+              { title: "Créer par" , data:"PrenomNomCreation", visible:false},
+              { title: "Urgent" , data: null},
+              { title: "Groupe", data: "GroupeAttributionTache"}
+          ],
+          "columnDefs": [{
+        "render": function(data, type, row) {
+          //tableButton
+        return '<a class="btn mt-4" href="detailTache/' + row.tache_id + '">' + row.tache_text +'</a>';
+        },
+        "targets": 0
+      },
+      {
+        "render": function(data,type,row) {
+          if (row.urgence_bool == 'true')
+            return 'Oui';
+          else
+            return 'Non';
+        }, 
+        "targets" :5
+      }]
+      });
+     var userConnecte = '{{user}}';
+     var mesData = data.filter(function(a) {
+      return a.UserEnCharge == userConnecte;
+      });
+     $('#tabMesTaches').DataTable({
+          data:mesData,
+          "bInfo" : false,
+          "bFilter": false,
+          "order": [[ 2, "asc" ], [ 5, "desc" ]],
+          "oLanguage": {
+            "sLengthMenu": "Afficher _MENU_ tâches",
+          },
+          columns: [
+              { title: "Titre" , data: "tache_text"},
+              { title: "Date de création" , data: "creation_date"},
+              { title: "Date Jalon" , data: "jalon_date"},
+              { title: "Personne en charge" , data:"PrenomNomEnCharge"},
+              { title: "Créer par" , data:"PrenomNomCreation", visible:false},
+              { title: "Urgent" , data: null},
+              { title: "Groupe", data: "GroupeAttributionTache"}
+          ],
+          "columnDefs": [{
+        "render": function(data, type, row) {
+          //tableButton
+        return '<a class="btn mt-4" href="detailTache/' + row.tache_id + '">' + row.tache_text +'</a>';
+        },
+        "targets": 0
+      },
+      {
+        "render": function(data,type,row) {
+          if (row.urgence_bool == 'true')
+            return 'Oui';
+          else
+            return 'Non';
+        }, 
+        "targets" :5
+      }]
+      });
+  });
+</script>
+
+
+ <br/> <br/> <br/> 
+
+  <table style="vertical-align:middle;" id="tabMesTaches" class="display" style="width:100%">
+    <caption style="font-size: 50px;">Mes tâches</caption>
+  </table>
+
+ <br/> <br/> <br/> 
+
+	<table style="vertical-align:middle;" id="tabTaches" class="display" style="width:100%">
+    <caption style="font-size: 50px;">Liste de toutes les tâches</caption>
+	</table>
+  <br/> <br/> 
+  <a href="/HomeManager/creerUneTache" style="font-size:40px;" class="btn mt-4">Créer une tâche</a>
+{% else %}
+    <script> 
+    window.location.href = "../login";
+    </script> 
+{% endif %}
+  </body>
+  </center>
+</html>
+
+
+

@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+{% if user.is_authenticated %}
+   <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/calendar.css" %}">  
+   <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/Styles_Rouge.css" %}">  
+  <head>
+    <meta charset="utf-8">
+    <title>Générateur d'attestation</title>
+    <script type="text/javascript" src="{% static "HomeManager/js/jquery-3.5.1.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+
+});
+</script>
+
+</head>
+<body class="fondEcran">
+<form id="modifTache" action="{% url 'HomeManager:GenererUneAttestation'%}" method="post">
+    {% csrf_token %}
+<h1> Générateur d'Attestation </h1>
+<span style="margin:40%;position:absolute;">
+<label style="font-size:35px;" for="lblMotif">Choix du motif : </label>
+            <select style="font-size:30px;" name="lblMotif" id="codeMotif">
+                <option value="sport">Sortir 1h</option>
+                <option value="courses">Faire les courses</option>
+                <option value="travail">Aller au travail</option>
+                <option value="sante">RDV Médical</option>
+                <option value="famille">Problème familial</option>
+            </select>
+<br/>
+<br/>
+<br/>
+<input type="submit" class="btn mt-4" style="height: 80px;" value="Générer Attestation">
+</span>
+</form>
+
+</body>
+    {% else %}
+        <script> 
+    window.location.href = "../login";
+    </script> 
+{% endif %}
+</html>

@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+{% if user.is_authenticated %}
+   <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/Styles_Rouge.css" %}">  
+   <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/authentification.css" %}">
+  {% block content %}
+  <head>
+    <meta charset="utf-8">
+    <a class="btn mt-4" href='/HomeManager'>Retour Liste des Taches</a>
+    <title>Détail de la tâche</title>
+    <script type="text/javascript" src="{% static "HomeManager/js/jquery-3.5.1.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#myEtat option[value="{{tache.etat_text}}"]').attr("selected",true);
+});
+</script>
+
+  </head>
+  <body class="fondEcran" style="line-height: 100px; text-align: center;">
+   <h1>{{ tache.tache_text }}</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+
+	<label class="inputText" for="txt_commentaire">Commentaire : </label> <br/>
+	<textarea class="inputVert" id="id_commentaire" name="txt_commentaire" rows="4" cols="40" form="modifTache">{{tache.commentaire_text}}</textarea>
+<form id="modifTache" action="{% url 'HomeManager:modificationTache' tache.id %}" method="post">
+{% csrf_token %}
+<label style="font-size:35px;" for="etatTache">Modifier état de la tache :</label>
+			<select style="font-size:30px;" class="inputVert" name="etatTache" id="myEtat">
+				<option value="EC">En cours</option>
+				<option value="AB">Abandon</option>
+				<option value="RF">Refus</option>
+				<option value="FN">Fini</option>
+			</select>
+<br/> 
+<input type="submit" class="btn mt-4" value="Modifier la tache">
+</form>
+  </body>
+	{% endblock %}
+{% else %}
+	    <script> 
+    window.location.href = "../login";
+    </script> 
+{% endif %}
+</html>

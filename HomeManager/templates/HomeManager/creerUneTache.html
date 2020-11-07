@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+{% if user.is_authenticated %}
+  <head>
+    <meta charset="utf-8">
+    <title>Creer une tache</title>
+        <link rel="stylesheet" type="text/css" href="{% static "HomeManager/css/Styles_Rouge.css" %}">
+	<script type="text/javascript" src="{% static "HomeManager/js/jquery-3.5.1.js" %}"></script>
+<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.19.0/jquery.validate.min.js"></script>
+</head>
+<body class="fondEcran" style="line-height: 100px; text-align: center;">
+	<h1 style="text-align: center; font-size: 60px;"> Création d'une nouvelle tâche </h1>
+ <form id="creerActionForm" action="enregistrementAction/" method="post">
+ 	{% csrf_token %}
+  	<label class="inputText" for="txt_tache">Nom de la tâche : </label>
+  	<br/>
+	<input class="inputVert" type="text" id="tache_text" name="txt_tache" required minlength="3" maxlength="120">
+	<br/>
+	<label class="inputText" for="txt_commentaire">Commentaire : </label>
+	<br/>
+		<textarea class="inputVert" type="text" id="commentaire_text" name="txt_commentaire" maxlength="600" rows="4" cols="40"> </textarea> 
+		<br/>
+	<label class="inputText" for="personne">Personne en charge de la tache :</label>
+			<select class="inputVert" name="personne" id="mypersonne" required>	
+			</select>
+			<br/>
+	<label class="inputText" for="parametrage">Catégorie :</label>
+			<select class="inputVert" name="parametrage" id="myparam" required>
+			</select>
+			<br/>
+	<input type="checkbox" name="isUrgent" id="isUrgent"/>
+	<label for="isUrgent" aria-describedby="label">Urgent</label>
+	<br/>
+	<input type="checkbox" id="isFuture" name="isFuture" />
+	<label for="isFuture" aria-describedby="label">Tâche future ?</label>
+	<input type="date" name="dateFuture" id="dtFuture" disabled="true">
+
+
+<div style="text-align: center">
+	<input class="myButton" style="font-size:40px;" type="submit" value="Enregistrer">
+</div>
+</form>
+</body>
+<script type="text/javascript">
+$(document).ready(function() {
+	var data = {{dataCreerTache|safe}};
+    var dropdownPersonne = document.getElementById("mypersonne");
+	for (var i = 0; i < data.listePersonne.length; ++i) {
+    	dropdownPersonne[dropdownPersonne.length] = new Option(data.listePersonne[i].prenomEtNom, data.listePersonne[i].id);
+	}
+
+	var dropdownParam = document.getElementById("myparam");
+	for (var i = 0; i < data.listeParametrage.length; ++i) {
+    	dropdownParam[dropdownParam.length] = new Option(data.listeParametrage[i].libelleTache_text, data.listeParametrage[i].id);
+	}
+
+
+	$("#isFuture").change(function() {
+	    if(this.checked) {
+	       $("#dtFuture").prop("disabled", false); 
+	    }
+	    else {
+	    	$("#dtFuture").prop("disabled", true); 
+	    }
+	});
+
+
+$.validator.addMethod("minDate", function(value, element) {
+    var curDate = new Date();
+    var inputDate = new Date(value);
+    if (inputDate > curDate)
+        return true;
+    return false;
+}, "La date saisie doit être supérieure à la date du jour.");   // error message
+
+    $("#creerActionForm").validate({
+        rules: {
+            dateFuture: {
+            	required:"#isFuture:checked",
+            	minDate: true
+        	}
+        },
+    	messages: {
+        	dateFuture: "Merci de renseigner une date future."
+        }
+    });
+});
+ </script>
+ {% else %}
+    <script> 
+    window.location.href = "../login";
+    </script> 
+{% endif %}
+</html>
